@@ -199,7 +199,7 @@ namespace LinqTutorials
         /// </summary>
         public static int Task3()
         {
-            int result = 0;
+            int result = Emps.Max(e => e.Salary);
             return result;
         }
 
@@ -208,7 +208,8 @@ namespace LinqTutorials
         /// </summary>
         public static IEnumerable<Emp> Task4()
         {
-            IEnumerable<Emp> result = null;
+            IEnumerable<Emp> result = Emps
+                .Where(e => e.Salary == Emps.Max(emp => emp.Salary));
             return result;
         }
 
@@ -217,7 +218,8 @@ namespace LinqTutorials
         /// </summary>
         public static IEnumerable<object> Task5()
         {
-            IEnumerable<object> result = null;
+            IEnumerable<object> result = Emps
+                .Select(e => new { Nazwisko = e.Ename, Praca = e.Job });
             return result;
         }
 
@@ -228,7 +230,12 @@ namespace LinqTutorials
         /// </summary>
         public static IEnumerable<object> Task6()
         {
-            IEnumerable<object> result = null;
+            IEnumerable<object> result = Emps
+                .Join(Depts,
+                    emp => emp.Deptno,
+                    dept => dept.Deptno,
+                    (emp, dept) => new { emp.Ename, emp.Job, dept.Dname }
+                );
             return result;
         }
 
@@ -333,9 +340,9 @@ namespace LinqTutorials
         //Put your extension methods here
         public static IEnumerable<Emp> GetEmpsWithSubordinates(this IEnumerable<Emp> emps)
         {
-            var result = emps.Where(e => emps.Any(e2 => e2.Mgr == e.Mgr)).OrderBy(e => e.Ename).ThenByDescending(e => e.Salary);
+            var result = emps.Where(e => emps.Any(e2 => e2.Mgr == e.Mgr)).OrderBy(e => e.Ename)
+                .ThenByDescending(e => e.Salary);
             return result;
         }
-
     }
 }
